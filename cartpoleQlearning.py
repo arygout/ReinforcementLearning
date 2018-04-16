@@ -7,7 +7,7 @@ env = gym.make('CartPole-v0')
 env.reset()
 learningRate = 0.01
 discount = 0.9999
-epochs = 20000
+epochs = 2000
 
 def determineAction(observation, Q, bounds, shouldRender):
     curQI = []
@@ -78,7 +78,8 @@ def main():
     bounds = []
     bounds.append(np.array([1e10]))#Position
     bounds.append(np.array([-0.5, -0.2, 0.2,  0.5,1e10]))#Velocity
-    bounds.append(np.array([-8, -6, -4, -2, -1, 1, 2, 4, 6, 8, 1e10])*math.pi/180)#Angle
+    #bounds.append(np.array([-8, -6, -4, -2, 0, 2, 4, 6, 8, 1e10])*math.pi/180)#Angle
+    bounds.append(np.array([0,1e10])*math.pi/180)#Angle
     bounds.append(np.array([-0.6, -0.3, -0.15, 0.15, 0.3, 0.6,1e10]))#Angular Velocity
 
     Q = np.ones((bounds[0].shape[0], bounds[1].shape[0], bounds[2].shape[0], bounds[3].shape[0],2 ))*40
@@ -95,12 +96,12 @@ def main():
         print(i)
         runEpisode(Q,bounds,True,env,counts)
 
-    for vInd in range(4):
+    for vInd in range(bounds[1].shape[0]):
         print("velocity:" + str(bounds[1][vInd]))
         print(" 1234567890")
-        for wInd in range(6):
+        for wInd in range(bounds[3].shape[0]):
             line = str(wInd) + ""
-            for tInd in range(10):
+            for tInd in range(bounds[2].shape[0]):
                 action = np.argmax(Q[0][vInd][tInd][wInd][:])
                 if Q[0][vInd][tInd][wInd][0] == 40:
                     line += " "
