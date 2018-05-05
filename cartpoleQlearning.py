@@ -7,21 +7,21 @@ env = gym.make('CartPole-v1')
 env.reset()
 learningRate = 0.01
 discount = 0.9999
-epochs = 2000
+epochs = 5000
 
 def determineAction(observation, Q, bounds, shouldRender):
+    #Gets Q at observation for all actions
     curQI = []
     for i in range(len(bounds)):
         #List around the observation[i] because we want to convert output of digitize to scalar value
         curQI.append(np.asscalar(np.digitize(observation[i],bounds[i])))
-
     curQ = Q[curQI[0]][curQI[1]][curQI[2]][curQI[3]][:]
 
     if shouldRender:
         return np.argmax(curQ)
     else:
+        #Uses a weighted random distribution to choose action based on Q values
         cs = np.cumsum(curQ)
-        #print(cs[-1])
         rVal = np.random.uniform(0,cs[-1])
         return np.asscalar(np.digitize(rVal,cs))
 
@@ -77,10 +77,10 @@ def main():
 
     bounds = []
     bounds.append(np.array([1e3]))#Position
-    #bounds.append(np.array([-0.5, -0.2, 0.2,  0.5,1e10]))#Velocity
-    bounds.append(np.array([0,1e3]))#Velocity
-    #bounds.append(np.array([-8, -6, -4, -2, 0, 2, 4, 6, 8, 1e10])*math.pi/180)#Angle
-    bounds.append(np.array([0,1e3])*math.pi/180)#Angle
+    bounds.append(np.array([-0.5, -0.2, 0.2,  0.5,1e10]))#Velocity
+    #bounds.append(np.array([0,1e3]))#Velocity
+    bounds.append(np.array([-8, -4, 0, 4, 8, 1e10])*math.pi/180)#Angle
+    #bounds.append(np.array([0,1e3])*math.pi/180)#Angle
     bounds.append(np.array([-0.6, -0.3, -0.15, 0.15, 0.3, 0.6,1e3]))#Angular Velocity
     #bounds.append(np.array([-0.3,0,0.3,1e10]))#Angular Velocity
 
